@@ -1,24 +1,24 @@
 
-shadowsocks for EdgeRouter X
+shadowsocksr for EdgeRouter X
 
 安装:
-1.下载shadowsocks_erx-master.zip并解压
+1.下载shadowsocksr_erx-master.zip并解压
 2.用winscp把解压的所有文件copy到/tmp目录
 3.连接路由CLI命令界面并登陆，然后执行: 
 cd /tmp
 sudo bash install.sh
-4.根据提示输入shadowsocks配置信息，一般只需要输入服务器地址、端口、密码，其它选项可以直接回车使用默认选项。
+4.根据提示输入shadowsocksr配置信息，一般只需要输入服务器地址、端口、密码，其它选项可以直接回车使用默认选项。
 
 注意:
-1.国内外流量自动分流，通过ipset对国内IP进行白名单，国内IP不会翻墙访问，只有国外流量会走shadowsocks通道翻墙
+1.国内外流量自动分流，通过ipset对国内IP进行白名单，国内IP不会翻墙访问，只有国外流量会走shadowsocksr通道翻墙
 2.只能对TCP流量翻墙
-3.国外网站DNS经shadowsocks服务器中转使用TCP访问8.8.8.8，防止污染，国内域名使用国内DNS解析，不会影响CDN访问
+3.国外网站DNS经shadowsocksr服务器中转使用TCP访问8.8.8.8，防止污染，国内域名使用国内DNS解析，不会影响CDN访问
 4.1080端口可以作为socks5翻墙代理使用
 5.文件存放在/config目录是因为这个目录备份配置的时候会被一起备份，并且系统升级也不会删除
-6.shadowsocks版本:v2.5.6, chinadns版本:v1.3.2(修改版)，pdnsd版本:v1.2.9
+6.shadowsocksr版本:v2.5.6, chinadns版本:v1.3.2(修改版)，pdnsd版本:v1.2.9
 7.EdgeRouter X EdgeOS v1.8.5,v1.9.0测试通过
-8.如果想暂停shadowsocks，运行sudo /etc/init.d/shadowsocks stop
-9.重新启动就运行sudo /etc/init.d/shadowsocks start
+8.如果想暂停shadowsocksr，运行sudo /etc/init.d/shadowsocksr stop
+9.重新启动就运行sudo /etc/init.d/shadowsocksr start
 
 
 DNS解析过程

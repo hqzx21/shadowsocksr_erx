@@ -1,33 +1,33 @@
 #! /bin/sh
 ### BEGIN INIT INFO
-# Provides:          shadowsocks
+# Provides:          shadowsocksr
 # Required-Start:    $syslog $time $remote_fs
 # Required-Stop:     $syslog $time $remote_fs
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Description:       Start shadowsocks daemon
+# Description:       Start shadowsocksr daemon
 ### END INIT INFO
 
 PATH=/bin:/usr/bin:/sbin:/usr/sbin
-DAEMON_SS_LOCAL=/config/shadowsocks/bin/ss-local
-DAEMON_SS_REDIR=/config/shadowsocks/bin/ss-redir
-DAEMON_PDNSD=/config/shadowsocks/bin/pdnsd
-DAEMON_CHINADNS=/config/shadowsocks/bin/chinadns
+DAEMON_SS_LOCAL=/config/shadowsocksr/bin/ss-local
+DAEMON_SS_REDIR=/config/shadowsocksr/bin/ss-redir
+DAEMON_PDNSD=/config/shadowsocksr/bin/pdnsd
+DAEMON_CHINADNS=/config/shadowsocksr/bin/chinadns
 
 
-#/config/shadowsocks/bin/pdnsd -c /config/shadowsocks/conf/pdnsd.conf
+#/config/shadowsocksr/bin/pdnsd -c /config/shadowsocksr/conf/pdnsd.conf
 #Change ISPDNS to your ISP dns or public dns, like 1.2.4.8, 114.114.114.114
 ISPDNS=114.114.114.114
 
-#This source ip range will not go through shadowsocks, uncomment if you want to use it
+#This source ip range will not go through shadowsocksr, uncomment if you want to use it
 #BYPASS_RANGE=192.168.123.0/24
 
-#Make sure your shadowsocks config file is correct!
-SSCONFIG=/config/shadowsocks/conf/shadowsocks.json
-PDNSD_CONFIG=/config/shadowsocks/conf/pdnsd.conf
+#Make sure your shadowsocksr config file is correct!
+SSCONFIG=/config/shadowsocksr/conf/shadowsocksr.json
+PDNSD_CONFIG=/config/shadowsocksr/conf/pdnsd.conf
 
 #Check ChinaDNS readme page on github to know how to generate latest chnroute.txt
-CHNROUTE=/config/shadowsocks/conf/chnroute.txt
+CHNROUTE=/config/shadowsocksr/conf/chnroute.txt
 
 PIDFILE_SS_LOCAL=/var/run/ss-local.pid
 PIDFILE_SS_REDIR=/var/run/ss-redir.pid
@@ -94,22 +94,22 @@ rules_add() {
 		create ss_ipset_bypass hash:net
 		$(gen_iplist | sed -e "s/^/add ss_ipset_bypass /")
 EOF
-	iptables -t nat -N SHADOWSOCKS && \
-	iptables -t nat -A SHADOWSOCKS -m set --match-set ss_ipset_bypass dst -j RETURN && \
-	iptables -t nat -A SHADOWSOCKS -p tcp -j REDIRECT --to-ports 1081 && \
-	iptables -t nat -A PREROUTING -p tcp -j SHADOWSOCKS && \
-	iptables -t nat -A OUTPUT -p tcp -j SHADOWSOCKS
+	iptables -t nat -N shadowsocksr && \
+	iptables -t nat -A shadowsocksr -m set --match-set ss_ipset_bypass dst -j RETURN && \
+	iptables -t nat -A shadowsocksr -p tcp -j REDIRECT --to-ports 1081 && \
+	iptables -t nat -A PREROUTING -p tcp -j shadowsocksr && \
+	iptables -t nat -A OUTPUT -p tcp -j shadowsocksr
 	if [ "$BYPASS_RANGE" ]; then
-		iptables -t nat -I SHADOWSOCKS -s $BYPASS_RANGE -j RETURN
+		iptables -t nat -I shadowsocksr -s $BYPASS_RANGE -j RETURN
 	fi
 	return $?
 }
 
 rules_flush() {
-	iptables -t nat -F SHADOWSOCKS
-	iptables -t nat -D PREROUTING -p tcp -j SHADOWSOCKS
-	iptables -t nat -D OUTPUT -p tcp -j SHADOWSOCKS
-	iptables -t nat -X SHADOWSOCKS
+	iptables -t nat -F shadowsocksr
+	iptables -t nat -D PREROUTING -p tcp -j shadowsocksr
+	iptables -t nat -D OUTPUT -p tcp -j shadowsocksr
+	iptables -t nat -X shadowsocksr
 	ipset -X ss_ipset_bypass
 	return $?
 }
@@ -181,7 +181,7 @@ case "$1" in
     status_of_proc -p $PIDFILE_CHINADNS $DAEMON_CHINADNS chinadns
     ;;
   *)
-    echo "Usage: /etc/init.d/shadowsocks {start|stop|restart|force-reload|status}"
+    echo "Usage: /etc/init.d/shadowsocksr {start|stop|restart|force-reload|status}"
     exit 1
     ;;
 esac
