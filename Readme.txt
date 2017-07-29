@@ -1,6 +1,9 @@
 
 shadowsocksr for EdgeRouter X
 
+安装前提示：
+ssr版不能与ss版同时运行，如果之前安装过ss版，必须先停止ss版服务，并且删除/etc/rc.local中的启动项再进行安装。
+
 安装:
 1.下载shadowsocksr_erx-master.zip并解压
 2.用winscp把解压的所有文件copy到/tmp目录
@@ -19,7 +22,13 @@ sudo bash install.sh
 7.EdgeRouter X EdgeOS v1.8.5,v1.9.0测试通过
 8.如果想暂停shadowsocksr，运行sudo /etc/init.d/shadowsocksr stop
 9.重新启动就运行sudo /etc/init.d/shadowsocksr start
+10.运行sudo crontab -e，并在文件末尾添加以下内容，就可以实现每隔5分钟检测ss状态，如果不能翻墙就自动重启服务：
+*/5 * * * * sh /config/shadowsocks/bin/ss-monitor.sh
 
+PT下载用户请注意，如果你有独立的下载机，可以设置让下载机不走SS。具体操作如下：
+ss启动脚本/etc/init.d/shadowsocks里面有下面一行:
+#BYPASS_RANGE=192.168.123.0/24
+去掉注释(删掉#号)重启服务就可以生效，然后192.168.123.0/24这整个网段都不会走ss通道了，同时也无法翻墙了，192.168.123.0/24也可以换成单独IP或者其它网段。
 
 DNS解析过程
 chinadns    必须配置至少一个国内DNS，一个国外DNS
