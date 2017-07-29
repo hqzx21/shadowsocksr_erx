@@ -23,7 +23,7 @@ sudo bash install.sh
 8.如果想暂停shadowsocksr，运行sudo /etc/init.d/shadowsocksr stop
 9.重新启动就运行sudo /etc/init.d/shadowsocksr start
 10.运行sudo crontab -e，并在文件末尾添加以下内容，就可以实现每隔5分钟检测ss状态，如果不能翻墙就自动重启服务：
-*/5 * * * * sh /config/shadowsocks/bin/ss-monitor.sh
+*/5 * * * * sh /config/shadowsocksr/bin/ss-monitor.sh
 
 PT下载用户请注意，如果你有独立的下载机，可以设置让下载机不走SS。具体操作如下：
 ss启动脚本/etc/init.d/shadowsocks里面有下面一行:
